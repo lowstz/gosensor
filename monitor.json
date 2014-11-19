@@ -1,0 +1,23 @@
+{
+	"name":"",
+	"description":"",
+	"github":"",
+	"master":{
+		"ip":"master.curio.im"
+	},
+	"monitor":{
+		"type":"port",
+		"frequency":"5",
+		"detail":{
+			"port":8080
+		}
+	},
+	"notify":{
+		"type":"hipchat",
+		"detail":{
+			"from":"",
+			"to":"",
+			"content":""
+		}
+	}
+}
