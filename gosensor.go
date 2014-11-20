@@ -11,23 +11,21 @@ import (
 
 type Gosensor struct{}
 
-var gosensor Gosensor
-
-func (g Gosensor) checkServiceAliveWithPort(port int) bool {
+func (g Gosensor) CheckServiceAliveWithPort(port int) bool {
 	cmd := "lsof -i:" + strconv.Itoa(port) + " | grep -v COMMAND | wc -l"
-	debug.Println(getFuncName(), cmd)
+	debug.Println(showCallerName(), cmd)
 	out, err := exec.Command("sh", "-c", cmd).Output()
 	if err != nil {
-		errl.Println(getFuncName(), err)
+		errl.Println(showCallerName(), err)
 	}
-	debug.Println(getFuncName(), "command output: ", out)
+	debug.Println(showCallerName(), "command output: ", out)
 	result := strings.TrimSpace(string(out))
-	debug.Println(getFuncName(), "result: ", result)
+	debug.Println(showCallerName(), "result: ", result)
 	status, err := strconv.Atoi(result)
 	if err != nil {
-		errl.Println(getFuncName(), err)
+		errl.Println(showCallerName(), err)
 	}
-	debug.Println(getFuncName(), status)
+	debug.Println(showCallerName(), status)
 	if status > 0 {
 		return true
 	}
@@ -38,26 +36,28 @@ func main() {
 	flag.Parse()
 	initLog()
 
+	var gosensor Gosensor
 	var parser ProjectConfigParser
 
 	config := parser.Parse(configPath)
 
 	var wg sync.WaitGroup
 	freq, err := strconv.Atoi(config.Monitor.Frequency)
-	info.Println(getFuncName()+"freq: ", freq)
+	info.Println(showCallerName()+"freq: ", freq)
 	if err != nil {
-		errl.Println(getFuncName(), "strconv err", err)
+		errl.Println(showCallerName(), "strconv err", err)
 	}
 	ticker := time.NewTicker(time.Second * time.Duration(freq))
 
-	for t := range ticker.C {
+	for time := range ticker.C {
+		debug.Println(showCallerName(), time)
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			if gosensor.checkServiceAliveWithPort(config.Monitor.Detail.Port) {
-				info.Println(getFuncName(), "Service work OK!", t)
+			if gosensor.CheckServiceAliveWithPort(config.Monitor.Detail.Port) {
+				info.Println(showCallerName(), getHostName(), config.Name, "is alive.")
 			} else {
-				errl.Println(getFuncName(), "Service is down!!!", t)
+				errl.Println(showCallerName(), getHostName(), config.Name, "is down!!!")
 			}
 		}()
 		wg.Wait()

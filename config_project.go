@@ -24,6 +24,7 @@ type ProjectConfig struct {
 	Name   string `json:"name"`
 	Notify struct {
 		Detail struct {
+			Token   string `json:token`
 			Content string `json:"content"`
 			From    string `json:"from"`
 			To      string `json:"to"`
@@ -54,8 +55,3 @@ func (p ProjectConfigParser) Parse(path string) ProjectConfig {
 	}
 	return projectConfig
 }
-
-// func main() {
-// 	var parser ProjectConfigParser
-// 	parser.Parse("./monitor.json")
-// }
