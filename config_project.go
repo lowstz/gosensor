@@ -51,16 +51,24 @@ var (
 )
 
 func init() {
-	flag.StringVar((*string)(&configPath), "configPath", "./monitor.json", "project config file path")
+	flag.StringVar((*string)(&configPath), "rc", "./monitor.json", "project config file path")
 }
 
 func (p ProjectConfigParser) Parse(path string) ProjectConfig {
+	exists, err := files.IsFileExist(files.AbsPath(path))
+	if err != nil {
+		errl.Println(showCallerName(), err)
+	}
+	if !exists {
+		errl.Println(showCallerName(), "cannot access", path, ": No such file or directory")
+		os.Exit(1)
+	}
 
 	file, _ := os.Open(files.AbsPath(path))
 	defer file.Close()
 	decoder := json.NewDecoder(file)
 	projectConfig := ProjectConfig{}
-	err := decoder.Decode(&projectConfig)
+	err = decoder.Decode(&projectConfig)
 	if err != nil {
 		errl.Println("parse err")
 	}
