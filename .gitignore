@@ -3,9 +3,16 @@
 *.a
 *.so
 
+# Log file
+*.log
+
+# MAC OSX 
+.DS_store
+
 # Folders
 _obj
 _test
+bin
 
 # Architecture specific extensions/prefixes
 *.[568vq]
