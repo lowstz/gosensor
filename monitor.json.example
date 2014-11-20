@@ -7,18 +7,29 @@
 	},
 	"monitor":{
 		"type":"port",
-		"frequency":"5",
+		"frequency":"10",
 		"detail":{
 			"port":8080
 		}
 	},
 	"notify":{
-		"type":"hipchat",
-		"detail":{
-			"token":"",
-			"from":"",
+		"hipchat":{
+			"token":"<YOUR AUTH TOKEN>",
+			"from":"bot",
 			"to":"",
-			"content":""
+			"content":{
+				"offline":" @LOL 蒙哥别摸我",
+				"online":" @LOL 我的大斧已经饥渴难耐"
+			}
+		},
+		"email":{
+			"smtp_server":"",
+			"smtp_port":587,
+			"mail_user":"user",
+			"mail_password":"password",
+			"subject":"",
+			"content":{},
+			"send_to_list":[]
 		}
 	}
 }

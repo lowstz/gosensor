@@ -15,21 +15,32 @@ type ProjectConfig struct {
 	} `json:"master"`
 	Monitor struct {
 		Detail struct {
-			Port    int    `json:"port",omitempty`
-			PidFile string `json:"pidfile,omitempty"`
+			Port int `json:"port",omitempty`
 		} `json:"detail"`
 		Frequency string `json:"frequency"`
 		Type      string `json:"type"`
 	} `json:"monitor"`
 	Name   string `json:"name"`
 	Notify struct {
-		Detail struct {
-			Token   string `json:token`
-			Content string `json:"content"`
-			From    string `json:"from"`
-			To      string `json:"to"`
-		} `json:"detail"`
-		Type string `json:"type"`
+		Email struct {
+			Content struct {
+			} `json:"content"`
+			MailPassword string        `json:"mail_password"`
+			MailUser     string        `json:"mail_user"`
+			SendToList   []interface{} `json:"send_to_list"`
+			SmtpPort     int64         `json:"smtp_port"`
+			SmtpServer   string        `json:"smtp_server"`
+			Subject      string        `json:"subject"`
+		} `json:"email"`
+		Hipchat struct {
+			Content struct {
+				Offline string `json:"offline"`
+				Online  string `json:"online"`
+			} `json:"content"`
+			From  string `json:"from"`
+			To    string `json:"to"`
+			Token string `json:"token"`
+		} `json:"hipchat"`
 	} `json:"notify"`
 }
 

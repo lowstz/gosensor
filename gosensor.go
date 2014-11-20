@@ -9,10 +9,14 @@ import (
 	"time"
 )
 
+const (
+	version = "0.0.1"
+)
+
 type Gosensor struct{}
 
 func (g Gosensor) CheckServiceAliveWithPort(port int) bool {
-	cmd := "lsof -i:" + strconv.Itoa(port) + " | grep -v COMMAND | wc -l"
+	cmd := "lsof -i:" + strconv.Itoa(port) + " | grep LISTEN | wc -l"
 	debug.Println(showCallerName(), cmd)
 	out, err := exec.Command("sh", "-c", cmd).Output()
 	if err != nil {
@@ -48,7 +52,7 @@ func main() {
 		errl.Println(showCallerName(), "strconv err", err)
 	}
 	ticker := time.NewTicker(time.Second * time.Duration(freq))
-
+	downStatusCounter := 0
 	for time := range ticker.C {
 		debug.Println(showCallerName(), time)
 		wg.Add(1)
@@ -56,8 +60,32 @@ func main() {
 			defer wg.Done()
 			if gosensor.CheckServiceAliveWithPort(config.Monitor.Detail.Port) {
 				info.Println(showCallerName(), getHostName(), config.Name, "is alive.")
+				if downStatusCounter != 0 {
+					notifReq := Hipchat{
+						Token: config.Notify.Hipchat.Token,
+						From:  config.Notify.Hipchat.From,
+						To:    config.Notify.Hipchat.To,
+						Color: "green",
+						Content: "INFO:  {" + getHostName() + ":" + getLocalIPAddress() +
+							"} [" + config.Name + "] is back to alive \n" +
+							config.Notify.Hipchat.Content.Online,
+					}
+					SendNotification(notifReq)
+					downStatusCounter = 0
+				}
 			} else {
 				errl.Println(showCallerName(), getHostName(), config.Name, "is down!!!")
+				notifReq := Hipchat{
+					Token: config.Notify.Hipchat.Token,
+					From:  config.Notify.Hipchat.From,
+					To:    config.Notify.Hipchat.To,
+					Color: "red",
+					Content: "ERROR: {" + getHostName() + ":" + getLocalIPAddress() +
+						"} [" + config.Name + "] is down!!! \n" +
+						config.Notify.Hipchat.Content.Offline,
+				}
+				SendNotification(notifReq)
+				downStatusCounter++
 			}
 		}()
 		wg.Wait()

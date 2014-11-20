@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net"
 	"os"
 	"runtime"
 )
@@ -23,4 +24,23 @@ func getHostName() string {
 		debug.Println(hostname)
 		return hostname
 	}
+}
+
+func getLocalIPAddress() string {
+	addrs, err := net.InterfaceAddrs()
+
+	if err != nil {
+		errl.Println(showCallerName(), err)
+	}
+
+	for _, address := range addrs {
+		// check the address type and if it is not a loopback the display it
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				debug.Println(showCallerName(), "ip address is: ", ipnet.IP.String())
+				return ipnet.IP.String()
+			}
+		}
+	}
+	return "ip not found"
 }
