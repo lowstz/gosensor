@@ -1,13 +1,13 @@
 #!/bin/bash
-# This build script get from https://github.com/cyfdecyf/cow/blob/master/script/build.sh
+# this build script get from https://github.com/cyfdecyf/cow/blob/master/script/build.sh
 cd "$( dirname "${BASH_SOURCE[0]}" )/.."
 
 version=`grep 'version' gosensor.go  | sed 's/^[[:space:]]*version = //' | sed 's/"//g'`
-echo "creating cow binary version $version"
+echo "creating gosensor binary version $version"
 
-mkdir -p bin
+mkdir -p build
 build() {
-    local name
+    local dirname
     local goos
     local goarch
     local goarm
@@ -29,12 +29,15 @@ build() {
         cgo="CGO_ENABLED=0"
     fi
 
-    name=gosensor-$arch-$version
-    echo "building $name"
+    dirname=build/$arch-$version
+    echo $dirname
+    mkdir -p $dirname
+    echo "building $dirname"
     echo $cgo $goos $goarch $goarm go build
     eval $cgo $goos $goarch $goarm go build || exit 1
-    mv gosensor bin/$name
-    gzip -f bin/$name
+
+    mv gosensor $dirname/
+    cp monitor.json.example $dirname/monitor.json
 }
 
 build darwin amd64 mac64

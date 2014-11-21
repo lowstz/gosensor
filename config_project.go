@@ -51,7 +51,7 @@ var (
 )
 
 func init() {
-	flag.StringVar((*string)(&configPath), "rc", "./monitor.json", "project config file path")
+	flag.StringVar((*string)(&configPath), "rc", "/etc/gosensor/monitor.json", "project config file path")
 }
 
 func (p ProjectConfigParser) Parse(path string) ProjectConfig {
