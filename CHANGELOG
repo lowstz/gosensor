@@ -1,0 +1,4 @@
+0.0.1 (2014-11-21)
+
+	* Monitoring service use port
+	* Hipchat notification support

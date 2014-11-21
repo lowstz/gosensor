@@ -56,3 +56,8 @@ GoSensor read default Configuration from `/etc/gosensor/monitor.json`,
 but you can use `-rc` arguments to specify other configuration file.
 
 Read more about [monitor.json.example](https://github.com/lowstz/gosensor/blob/master/monitor.json.example)
+
+## License
+Copyright (c) 2013 Zhanpeng Chen
+
+[MIT License](https://github.com/lowstz/gosensor/blob/master/LICENSE)
