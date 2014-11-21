@@ -7,7 +7,7 @@
 	},
 	"monitor":{
 		"type":"port",
-		"frequency":"10",
+		"frequency":"60",
 		"detail":{
 			"port":8080
 		}

@@ -4,7 +4,7 @@ import (
 	"github.com/andybons/hipchat"
 )
 
-type notification interface {
+type Notification interface {
 	send()
 }
 
@@ -46,6 +46,6 @@ func (sms SMS) send() {
 
 }
 
-func SendNotification(n notification) {
+func SendNotification(n Notification) {
 	n.send()
 }

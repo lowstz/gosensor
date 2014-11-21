@@ -54,6 +54,7 @@ func init() {
 	flag.StringVar((*string)(&configPath), "rc", "/etc/gosensor/monitor.json", "project config file path")
 }
 
+// Parse monitor.json into ProjectConfig struct
 func (p ProjectConfigParser) Parse(path string) ProjectConfig {
 	exists, err := files.IsFileExist(files.AbsPath(path))
 	if err != nil {

@@ -6,6 +6,7 @@ import (
 	"runtime"
 )
 
+// Get the caller function name, Make Program easy for debug.
 func showCallerName() string {
 	pc, _, _, ok := runtime.Caller(1)
 	if !ok {
@@ -15,6 +16,9 @@ func showCallerName() string {
 	return runtime.FuncForPC(pc).Name()
 }
 
+// Get local hostname
+// if not error, return HostName,
+// if err, return "Unknown Hostname"
 func getHostName() string {
 	hostname, err := os.Hostname()
 	if err != nil {
@@ -26,6 +30,9 @@ func getHostName() string {
 	}
 }
 
+// Get local ip address
+// return first vaild ip address
+// if all ip ivalid, return "ip not found"
 func getLocalIPAddress() string {
 	addrs, err := net.InterfaceAddrs()
 

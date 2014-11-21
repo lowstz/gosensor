@@ -15,6 +15,8 @@ const (
 
 type Gosensor struct{}
 
+// If the service from configuration file is Alive, return true,
+// if the service down return false.
 func (g Gosensor) CheckServiceAliveWithPort(port int) bool {
 	cmd := "lsof -i:" + strconv.Itoa(port) + " | grep LISTEN | wc -l"
 	debug.Println(showCallerName(), cmd)
@@ -60,6 +62,9 @@ func main() {
 			defer wg.Done()
 			if gosensor.CheckServiceAliveWithPort(config.Monitor.Detail.Port) {
 				info.Println(showCallerName(), getHostName(), config.Name, "is alive.")
+
+				// If the service switch from Offline to Online,
+				// Send a Notification to related people.
 				if downStatusCounter != 0 {
 					notifReq := Hipchat{
 						Token: config.Notify.Hipchat.Token,
